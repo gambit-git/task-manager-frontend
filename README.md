@@ -1,75 +1,94 @@
-# React + TypeScript + Vite
+# Administrador de tareas - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto desarrollado por Gerard Andrei Hincapié Méndez para
+la asignatura Diseño Frontend con Frameworks.
 
-Currently, two official plugins are available:
+Actividad EC2 F1 A5: inicialización del Administrador de tareas
+con React, TypeScript y Vite.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tecnologías
 
-## React Compiler
+- React
+- TypeScript
+- Vite
+- PNPM
+- CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Alcance actual
 
-## Expanding the ESLint configuration
+La aplicación presenta una interfaz estática organizada mediante
+componentes reutilizables y propiedades tipadas.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Muestra un encabezado, un formulario de registro, controles de
+búsqueda y organización, un resumen y tres tareas de demostración:
+una completada y dos pendientes.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+El formulario, los filtros y las acciones todavía no modifican
+las tareas. Los botones de agregar, cambiar estado, editar y
+eliminar permanecen deshabilitados.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Esta versión no implementa estado, operaciones CRUD, persistencia
+ni conexión con una API.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+La interfaz incluye estilos adaptables a diferentes tamaños
+de pantalla.
 
+## Requisitos
+
+- Node.js
+- PNPM
+- Git para clonar el repositorio
+
+## Instalación
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/gambit-git/task-manager-frontend.git
+cd task-manager-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Instalar las dependencias:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+pnpm install
 ```
+
+## Ejecución
+
+```bash
+pnpm dev
+```
+
+Abrir en el navegador la dirección local que indique Vite.
+
+## Análisis del código
+
+```bash
+pnpm lint
+```
+
+## Compilación
+
+```bash
+pnpm build
+```
+
+## Componentes principales
+
+| Componente | Responsabilidad |
+|---|---|
+| App | Integra y organiza los componentes de la aplicación. |
+| AppHeader | Presenta el título y la descripción del proyecto. |
+| TaskForm | Muestra el formulario visual para registrar tareas. |
+| TaskFilters | Presenta los controles de búsqueda, estado y orden. |
+| TaskSummary | Recibe y muestra el total de tareas, pendientes y completadas. |
+| TaskList | Agrupa las tres tareas de demostración. |
+| TaskItem | Representa una tarea mediante su título y estado. |
+| AppFooter | Muestra el pie de página y recibe el nombre del curso. |
+
+## Desafío individual
+
+El pie de página se extrajo de App.tsx al componente AppFooter.
+Este recibe courseName como una propiedad de tipo string,
+sin utilizar estado ni eventos.
