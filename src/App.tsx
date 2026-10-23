@@ -4,12 +4,9 @@ import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { TaskSummary } from './components/TaskSummary';
 import { AppFooter } from './components/AppFooter';
-import { tasks } from './data/task';
+import { tasks } from './data/tasks';
 
 export default function App() {
-  const completed = tasks.filter((task) => task.status === 'completed').length;
-  const pending = tasks.length - completed;
-
   return (
     <div className="app-shell">
       <AppHeader />
@@ -18,11 +15,7 @@ export default function App() {
         <TaskForm />
         <TaskFilters />
 
-        <TaskSummary
-          total={tasks.length}
-          pending={pending}
-          completed={completed}
-        />
+        <TaskSummary tasks={tasks} />
 
         <TaskList tasks={tasks} />
       </main>

@@ -1,4 +1,5 @@
 import type { Task } from '../models/task.interface';
+import { TaskStatusBadge } from './TaskStatusBadge';
 interface TaskItemProps {
 task: Task;
 }
@@ -16,10 +17,6 @@ title,
 status,
 updatedAt,
 } = task;
-const statusLabel =
-status === 'completed'
-? 'Completada'
-: 'Pendiente';
 return (
 <article
 className={`task-item task-item--${status}`}
@@ -29,11 +26,7 @@ role="listitem"
 <h3 className="task-item__title">
 {title}
 </h3>
-<span
-className={`status-badge status-badge--${status}`}
->
-{statusLabel}
-</span>
+<TaskStatusBadge status={status} />
 <p className="task-item__date">
 Actualizada:{' '}
 <time dateTime={updatedAt}>

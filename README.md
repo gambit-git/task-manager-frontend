@@ -3,8 +3,8 @@
 Proyecto desarrollado por Gerard Andrei Hincapié Méndez para
 la asignatura Diseño Frontend con Frameworks.
 
-Actividad EC2 F1 A5: inicialización del Administrador de tareas
-con React, TypeScript y Vite.
+Actividad EC2 F1 A6: modelado y renderizado dinámico de tareas
+con React y TypeScript, como continuidad de la actividad 5.
 
 ## Tecnologías
 
@@ -13,25 +13,31 @@ con React, TypeScript y Vite.
 - Vite
 - PNPM
 - CSS
+- Git y GitHub
 
 ## Alcance actual
 
-La aplicación presenta una interfaz estática organizada mediante
-componentes reutilizables y propiedades tipadas.
+La aplicación permite visualizar una colección local de tareas
+mediante componentes React.
 
-Muestra un encabezado, un formulario de registro, controles de
-búsqueda y organización, un resumen y tres tareas de demostración:
-una completada y dos pendientes.
+Actualmente incluye:
+
+- Modelo de tarea con TypeScript (interfaz Task y tipo unión TaskStatus).
+- Cinco tareas locales tipadas como Task[]: tres pendientes y dos completadas.
+- Renderizado mediante map.
+- Uso de claves estables (task.id).
+- Estados pendiente y completada, mostrados con TaskStatusBadge.
+- Resumen calculado a partir de la colección.
+- Mensaje para una colección vacía.
+- Diseño adaptable.
 
 El formulario, los filtros y las acciones todavía no modifican
 las tareas. Los botones de agregar, cambiar estado, editar y
 eliminar permanecen deshabilitados.
 
-Esta versión no implementa estado, operaciones CRUD, persistencia
-ni conexión con una API.
-
-La interfaz incluye estilos adaptables a diferentes tamaños
-de pantalla.
+Los formularios, eventos y operaciones CRUD se implementarán
+en actividades posteriores. Esta versión no implementa estado,
+persistencia ni conexión con una API.
 
 ## Requisitos
 
@@ -74,21 +80,38 @@ pnpm lint
 pnpm build
 ```
 
+## Estructura principal
+
+- components: componentes visuales.
+- data: colección local de tareas.
+- models: tipos e interfaces.
+- styles: estilos globales.
+- docs: preguntas de cierre y documentación.
+
+## Modelo Task
+
+Cada tarea contiene id, title, status, createdAt y updatedAt.
+El campo status solo admite los valores pending y completed
+(tipo TaskStatus). Las fechas se guardan como cadenas ISO.
+
 ## Componentes principales
 
 | Componente | Responsabilidad |
 |---|---|
-| App | Integra y organiza los componentes de la aplicación. |
+| App | Coordina la colección de tareas y la distribuye mediante props. |
 | AppHeader | Presenta el título y la descripción del proyecto. |
 | TaskForm | Muestra el formulario visual para registrar tareas. |
 | TaskFilters | Presenta los controles de búsqueda, estado y orden. |
-| TaskSummary | Recibe y muestra el total de tareas, pendientes y completadas. |
-| TaskList | Agrupa las tres tareas de demostración. |
-| TaskItem | Representa una tarea mediante su título y estado. |
+| TaskSummary | Calcula y muestra el total, pendientes y completadas a partir de la colección. |
+| TaskList | Recorre la colección con map y muestra el mensaje de lista vacía. |
+| TaskItem | Representa una tarea completa: título, estado y fecha de actualización. |
+| TaskStatusBadge | Muestra la insignia Pendiente o Completada según un TaskStatus. |
 | AppFooter | Muestra el pie de página y recibe el nombre del curso. |
 
-## Desafío individual
+## Desafíos individuales
 
-El pie de página se extrajo de App.tsx al componente AppFooter.
-Este recibe courseName como una propiedad de tipo string,
-sin utilizar estado ni eventos.
+- Actividad 5: el pie de página se extrajo de App.tsx al componente
+  AppFooter, que recibe courseName como propiedad de tipo string.
+- Actividad 6: la insignia de estado se extrajo de TaskItem al
+  componente TaskStatusBadge, que recibe status de tipo TaskStatus,
+  sin utilizar estado ni eventos.
