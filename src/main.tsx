@@ -9,7 +9,7 @@ const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error('No se encontró el elemento #root.');
 }
-
+console.log(rootElement);
 createRoot(rootElement).render(
   <StrictMode>
     <App />

@@ -4,8 +4,12 @@ import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { TaskSummary } from './components/TaskSummary';
 import { AppFooter } from './components/AppFooter';
+import { tasks } from './data/task';
 
 export default function App() {
+  const completed = tasks.filter((task) => task.status === 'completed').length;
+  const pending = tasks.length - completed;
+
   return (
     <div className="app-shell">
       <AppHeader />
@@ -14,9 +18,13 @@ export default function App() {
         <TaskForm />
         <TaskFilters />
 
-        <TaskSummary total={3} pending={2} completed={1} />
+        <TaskSummary
+          total={tasks.length}
+          pending={pending}
+          completed={completed}
+        />
 
-        <TaskList />
+        <TaskList tasks={tasks} />
       </main>
 
       <AppFooter courseName="Diseño Frontend con Frameworks" />
