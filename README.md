@@ -3,8 +3,8 @@
 Proyecto desarrollado por Gerard Andrei Hincapié Méndez para
 la asignatura Diseño Frontend con Frameworks.
 
-Actividad EC2 F1 A6: modelado y renderizado dinámico de tareas
-con React y TypeScript, como continuidad de la actividad 5.
+Actividad EC2 F2 A7: estado local, eventos y operaciones CRUD de
+tareas con React y TypeScript, como continuidad de la actividad 6.
 
 ## Tecnologías
 
@@ -17,27 +17,32 @@ con React y TypeScript, como continuidad de la actividad 5.
 
 ## Alcance actual
 
-La aplicación permite visualizar una colección local de tareas
-mediante componentes React.
+La aplicación administra una colección local de tareas mediante
+estado de React (useState en App). Actualmente permite:
 
-Actualmente incluye:
+- Registrar tareas mediante un formulario controlado.
+- Consultar la colección.
+- Completar y reabrir tareas.
+- Editar títulos mediante un formulario en línea.
+- Cancelar una edición sin alterar la tarea.
+- Eliminar con confirmación.
+- Eliminar todas las tareas completadas en una sola operación.
+- Calcular el resumen automáticamente.
+- Mostrar una colección vacía.
 
-- Modelo de tarea con TypeScript (interfaz Task y tipo unión TaskStatus).
-- Cinco tareas locales tipadas como Task[]: tres pendientes y dos completadas.
-- Renderizado mediante map.
-- Uso de claves estables (task.id).
-- Estados pendiente y completada, mostrados con TaskStatusBadge.
-- Resumen calculado a partir de la colección.
-- Mensaje para una colección vacía.
-- Diseño adaptable.
+Los cambios permanecen en memoria y se reinician al recargar.
+La búsqueda, los filtros, el ordenamiento y la persistencia se
+implementarán en la actividad 8.
 
-El formulario, los filtros y las acciones todavía no modifican
-las tareas. Los botones de agregar, cambiar estado, editar y
-eliminar permanecen deshabilitados.
+## Operaciones CRUD
 
-Los formularios, eventos y operaciones CRUD se implementarán
-en actividades posteriores. Esta versión no implementa estado,
-persistencia ni conexión con una API.
+- Create: registro mediante el formulario (spread, sin push).
+- Read: renderizado de la colección con map.
+- Update: cambio de estado y edición del título con map y spread.
+- Delete: eliminación confirmada con filter.
+
+Todas las operaciones usan una función actualizadora en setTasks
+y producen un arreglo nuevo, sin mutar el estado existente.
 
 ## Requisitos
 
@@ -98,13 +103,14 @@ El campo status solo admite los valores pending y completed
 
 | Componente | Responsabilidad |
 |---|---|
-| App | Coordina la colección de tareas y la distribuye mediante props. |
+| App | Fuente de verdad: guarda Task[] con useState e implementa las operaciones CRUD. |
 | AppHeader | Presenta el título y la descripción del proyecto. |
-| TaskForm | Muestra el formulario visual para registrar tareas. |
+| TaskForm | Formulario controlado que notifica una nueva tarea mediante onAddTask. |
 | TaskFilters | Presenta los controles de búsqueda, estado y orden. |
 | TaskSummary | Calcula y muestra el total, pendientes y completadas a partir de la colección. |
-| TaskList | Recorre la colección con map y muestra el mensaje de lista vacía. |
-| TaskItem | Representa una tarea completa: título, estado y fecha de actualización. |
+| TaskActions | Elimina todas las tareas completadas con confirmación. |
+| TaskList | Recorre la colección con map, reenvía las acciones y muestra el mensaje de lista vacía. |
+| TaskItem | Muestra una tarea y permite completar, reabrir, editar, cancelar y eliminar. Conserva solo el estado temporal de edición. |
 | TaskStatusBadge | Muestra la insignia Pendiente o Completada según un TaskStatus. |
 | AppFooter | Muestra el pie de página y recibe el nombre del curso. |
 
@@ -115,3 +121,6 @@ El campo status solo admite los valores pending y completed
 - Actividad 6: la insignia de estado se extrajo de TaskItem al
   componente TaskStatusBadge, que recibe status de tipo TaskStatus,
   sin utilizar estado ni eventos.
+- Actividad 7: el componente TaskActions recibe completedCount y
+  onClearCompleted, se deshabilita cuando no hay completadas, solicita
+  confirmación y App elimina las tareas completadas mediante filter.
