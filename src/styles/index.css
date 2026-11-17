@@ -173,14 +173,46 @@ p {
 
 .filters-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(170px, 1fr));
   gap: 1rem;
+  align-items: end;
 }
 
 .field {
   display: grid;
   align-content: start;
   gap: 0.45rem;
+}
+.field-error {
+  margin: 0;
+  color: #9b1c1c;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+input[aria-invalid='true'] {
+  border-color: #9b1c1c;
+  outline-color: #9b1c1c;
+}
+
+.filter-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.filter-field span {
+  font-weight: 700;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+}
+
+.filter-results {
+  min-height: 1.4rem;
+  margin: 1rem 0 0;
+  color: #4b5563;
 }
 
 .summary-grid {
