@@ -3,6 +3,7 @@ import { AppHeader } from "./components/AppHeader";
 import { TaskFilters } from "./components/TaskFilters";
 import { TaskForm } from "./components/TaskForm";
 import { TaskList } from "./components/TaskList";
+import { TaskPagination } from "./components/TaskPagination";
 import { TaskSummary } from "./components/TaskSummary";
 import { TaskActions } from "./components/TaskActions";
 import { AppFooter } from "./components/AppFooter";
@@ -12,11 +13,14 @@ import type { TaskFilter, TaskSort } from "./models/task-view.types";
 import { getVisibleTasks } from "./services/task-query.service";
 import { loadTasks, saveTasks } from "./services/task-storage.service";
 
+const PAGE_SIZE = 5;
+
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks(initialTasks));
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [sortBy, setSortBy] = useState<TaskSort>("updated-desc");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     saveTasks(tasks);
@@ -27,6 +31,11 @@ export default function App() {
     filter,
     sortBy,
   });
+
+  const totalPages = Math.max(1, Math.ceil(visibleTasks.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * PAGE_SIZE;
+  const paginatedTasks = visibleTasks.slice(startIndex, startIndex + PAGE_SIZE);
 
   const hasActiveCriteria = query.trim() !== "" || filter !== "all";
 
@@ -110,10 +119,29 @@ export default function App() {
     );
   }
 
+  function handleQueryChange(value: string): void {
+    setQuery(value);
+    setCurrentPage(1);
+  }
+
+  function handleFilterChange(value: TaskFilter): void {
+    setFilter(value);
+    setCurrentPage(1);
+  }
+
   function handleClearCriteria(): void {
     setQuery("");
     setFilter("all");
     setSortBy("updated-desc");
+    setCurrentPage(1);
+  }
+
+  function handlePreviousPage(): void {
+    setCurrentPage(Math.max(1, safePage - 1));
+  }
+
+  function handleNextPage(): void {
+    setCurrentPage(Math.min(totalPages, safePage + 1));
   }
 
   return (
@@ -126,8 +154,8 @@ export default function App() {
           filter={filter}
           sortBy={sortBy}
           resultCount={visibleTasks.length}
-          onQueryChange={setQuery}
-          onFilterChange={setFilter}
+          onQueryChange={handleQueryChange}
+          onFilterChange={handleFilterChange}
           onSortChange={setSortBy}
           onClear={handleClearCriteria}
         />
@@ -137,11 +165,17 @@ export default function App() {
           onClearCompleted={handleClearCompleted}
         />
         <TaskList
-          tasks={visibleTasks}
+          tasks={paginatedTasks}
           emptyMessage={emptyMessage}
           onToggleStatus={handleToggleStatus}
           onEditTask={handleEditTask}
           onDeleteTask={handleDeleteTask}
+        />
+        <TaskPagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPrevious={handlePreviousPage}
+          onNext={handleNextPage}
         />
       </main>
       <AppFooter courseName="Diseño Frontend con Frameworks" />

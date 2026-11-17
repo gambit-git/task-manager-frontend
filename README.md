@@ -35,6 +35,7 @@ React (useState en App) y la conserva en el navegador. Permite:
 - Filtrar por estado: todas, pendientes o completadas.
 - Ordenar por actualización reciente, creación reciente o título A-Z.
 - Limpiar los criterios de consulta.
+- Paginar los resultados visibles de cinco en cinco.
 - Calcular el resumen con todas las tareas, sin importar los filtros.
 - Mostrar un mensaje distinto cuando no hay tareas y cuando ninguna
   coincide con la consulta.
@@ -45,7 +46,7 @@ React (useState en App) y la conserva en el navegador. Permite:
 
 Esta versión utiliza almacenamiento local del navegador y del origen
 actual. La búsqueda, el filtro y el orden no se guardan: vuelven a su
-valor inicial al recargar. No se usan Fetch API, Axios, autenticación
+valor inicial al recargar, igual que la página actual. No se usan Fetch API, Axios, autenticación
 ni estado global. La conexión con la API REST se realizará en el
 elemento de competencia 3.
 
@@ -152,7 +153,8 @@ created-desc o title-asc) y TaskViewOptions.
 | TaskFilters | Controles controlados de búsqueda, estado y orden, con opción para limpiar criterios y el conteo de resultados. |
 | TaskSummary | Calcula y muestra el total, pendientes y completadas de toda la colección. |
 | TaskActions | Elimina todas las tareas completadas con confirmación. |
-| TaskList | Recorre las tareas visibles con map, reenvía las acciones y muestra el mensaje de lista vacía recibido. |
+| TaskList | Recorre las tareas de la página actual con map, reenvía las acciones y muestra el mensaje de lista vacía recibido. |
+| TaskPagination | Muestra la página actual y los controles Anterior y Siguiente. |
 | TaskItem | Muestra una tarea y permite completar, reabrir, editar con validación, cancelar y eliminar. Conserva solo el estado temporal de edición. |
 | TaskStatusBadge | Muestra la insignia Pendiente o Completada según un TaskStatus. |
 | AppFooter | Muestra el pie de página y recibe el nombre del curso. |
@@ -167,5 +169,9 @@ created-desc o title-asc) y TaskViewOptions.
 - Actividad 7: el componente TaskActions recibe completedCount y
   onClearCompleted, se deshabilita cuando no hay completadas, solicita
   confirmación y App elimina las tareas completadas mediante filter.
-- Actividad 8: el desafío opcional de paginación local no forma parte
-  de esta entrega.
+- Actividad 8: paginación local de cinco resultados por página. App
+  guarda currentPage, calcula el total de páginas desde visibleTasks y
+  corta la lista con slice. El componente TaskPagination ofrece los
+  controles Anterior y Siguiente, deshabilitados en la primera y la
+  última página. La página vuelve a la primera al cambiar la búsqueda
+  o el filtro, y no se guarda en localStorage.

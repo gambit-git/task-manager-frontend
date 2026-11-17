@@ -394,6 +394,19 @@ input[aria-invalid='true'] {
   color: #475569;
 }
 
+.task-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.task-pagination p {
+  margin-bottom: 0;
+  color: #475569;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
