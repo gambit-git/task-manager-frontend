@@ -10,7 +10,6 @@ import { tasks as initialTasks } from "./data/tasks";
 import type { Task } from "./models/task.interface";
 
 export default function App() {
-  console.log(initialTasks);
   const [tasks, setTasks] = useState<Task[]>(() => [...initialTasks]);
 
   function handleAddTask(title: string) {
