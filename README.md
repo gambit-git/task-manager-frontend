@@ -3,13 +3,15 @@
 Proyecto desarrollado por Gerard Andrei Hincapié Méndez para
 la asignatura Diseño Frontend con Frameworks.
 
-Actividad EC2 F3 A8: validación accesible, búsqueda, filtros,
-ordenamiento y persistencia local con React y TypeScript, como
-continuidad de la actividad 7.
+Actividad EC3 F1 A9: navegación SPA con React Router, layout
+compartido y ruta dinámica de detalle, como continuidad de la
+actividad 8 (validación, búsqueda, filtros, ordenamiento y
+persistencia local).
 
 ## Tecnologías
 
 - React
+- React Router 7.18.4 (modo declarativo)
 - TypeScript
 - Vite
 - PNPM
@@ -18,6 +20,9 @@ continuidad de la actividad 7.
 - Git y GitHub
 
 ## Funciones actuales
+
+- Navegación SPA sin recarga completa, con menú que marca la opción activa.
+- Página de inicio, administración de tareas, detalle y página 404.
 
 La aplicación administra una colección de tareas mediante estado de
 React (useState en App) y la conserva en el navegador. Permite:
@@ -42,13 +47,28 @@ React (useState en App) y la conserva en el navegador. Permite:
 - Conservar las tareas al recargar mediante localStorage.
 - Adaptar los controles a pantallas estrechas.
 
+## Rutas
+
+| Ruta | Página | Responsabilidad |
+|---|---|---|
+| `/` | HomePage | Presenta la aplicación y el resumen. |
+| `/tasks` | TasksPage | CRUD completo, consulta y paginación. |
+| `/tasks/:taskId` | TaskDetailPage | Detalle de una tarea; muestra un mensaje si no existe. |
+| `*` | NotFoundPage | Respuesta para direcciones inexistentes. |
+
+BrowserRouter envuelve la aplicación una sola vez en main.tsx. AppLayout
+aporta encabezado, navegación, contenido (Outlet) y pie de página. Al
+eliminar una tarea desde su detalle se usa useNavigate con replace para
+volver a /tasks.
+
 ## Alcance
 
 Esta versión utiliza almacenamiento local del navegador y del origen
 actual. La búsqueda, el filtro y el orden no se guardan: vuelven a su
 valor inicial al recargar, igual que la página actual. No se usan Fetch API, Axios, autenticación
-ni estado global. La conexión con la API REST se realizará en el
-elemento de competencia 3.
+ni estado global, ni loaders ni actions de React Router. App.tsx sigue
+siendo la fuente de verdad y entrega datos y funciones a las páginas
+mediante propiedades. La API REST se integrará en la actividad 10.
 
 ## Flujo de datos
 
@@ -118,10 +138,12 @@ pnpm build
 ## Estructura principal
 
 - components: componentes visuales.
+- layouts: AppLayout (estructura compartida con Outlet).
+- pages: HomePage, TasksPage, TaskDetailPage y NotFoundPage.
 - data: colección inicial de tareas.
 - models: tipos e interfaces (Task, TaskFilter, TaskSort).
 - services: consulta de tareas y almacenamiento local.
-- utils: validación del título.
+- utils: validación del título y formato de fechas.
 - styles: estilos globales.
 - docs: preguntas de cierre y documentación.
 
@@ -148,6 +170,7 @@ created-desc o title-asc) y TaskViewOptions.
 | Componente | Responsabilidad |
 |---|---|
 | App | Fuente de verdad: guarda Task[] y los criterios de consulta, implementa el CRUD y sincroniza localStorage. |
+| AppNavigation | Menú principal con NavLink; identifica la sección activa. |
 | AppHeader | Presenta el título y la descripción del proyecto. |
 | TaskForm | Formulario controlado con validación accesible que notifica una nueva tarea mediante onAddTask. |
 | TaskFilters | Controles controlados de búsqueda, estado y orden, con opción para limpiar criterios y el conteo de resultados. |
@@ -175,3 +198,8 @@ created-desc o title-asc) y TaskViewOptions.
   controles Anterior y Siguiente, deshabilitados en la primera y la
   última página. La página vuelve a la primera al cambiar la búsqueda
   o el filtro, y no se guarda en localStorage.
+- Actividad 9: la consulta de búsqueda se conserva en la URL con
+  useSearchParams (/tasks?q=documentacion). App inicializa query desde
+  q, actualiza la URL al escribir (con replace, para no llenar el
+  historial) y elimina q cuando la consulta queda vacía. El filtro y el
+  orden se conservan y localStorage no cambia.
