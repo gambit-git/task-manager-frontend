@@ -6,10 +6,11 @@ import {
 } from '../utils/task-validation';
 
 interface TaskFormProps {
-  onAddTask: (title: string) => void;
+  isSubmitting: boolean;
+  onAddTask: (title: string) => Promise<boolean>;
 }
 
-export function TaskForm({ onAddTask }: TaskFormProps) {
+export function TaskForm({ isSubmitting, onAddTask }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
 
@@ -21,7 +22,7 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
     const validationMessage = validateTaskTitle(title);
@@ -31,9 +32,12 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
       return;
     }
 
-    onAddTask(title.trim());
-    setTitle('');
-    setError('');
+    const wasCreated = await onAddTask(title.trim());
+
+    if (wasCreated) {
+      setTitle('');
+      setError('');
+    }
   }
 
   return (
@@ -45,7 +49,11 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
         </div>
       </div>
 
-      <form className="task-form" onSubmit={handleSubmit} noValidate>
+      <form
+        className="task-form"
+        onSubmit={(event) => void handleSubmit(event)}
+        noValidate
+      >
         <label htmlFor="task-title">Título de la tarea</label>
 
         <div className="task-form__row">
@@ -56,6 +64,7 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
             placeholder="Ejemplo: revisar documentación"
             maxLength={TASK_TITLE_MAX_LENGTH}
             value={title}
+            disabled={isSubmitting}
             onChange={(event) => handleTitleChange(event.target.value)}
             aria-invalid={Boolean(error)}
             aria-describedby={
@@ -63,7 +72,9 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
             }
           />
 
-          <button type="submit">Agregar tarea</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Guardando...' : 'Agregar tarea'}
+          </button>
         </div>
 
         <p id="task-title-help" className="helper-text">

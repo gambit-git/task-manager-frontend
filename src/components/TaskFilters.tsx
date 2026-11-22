@@ -5,6 +5,7 @@ interface TaskFiltersProps {
   filter: TaskFilter;
   sortBy: TaskSort;
   resultCount: number;
+  isLoading: boolean;
   onQueryChange: (value: string) => void;
   onFilterChange: (value: TaskFilter) => void;
   onSortChange: (value: TaskSort) => void;
@@ -16,6 +17,7 @@ export function TaskFilters({
   filter,
   sortBy,
   resultCount,
+  isLoading,
   onQueryChange,
   onFilterChange,
   onSortChange,
@@ -24,10 +26,9 @@ export function TaskFilters({
   const hasActiveCriteria =
     query.trim() !== '' || filter !== 'all' || sortBy !== 'updated-desc';
 
-  const resultLabel =
-    resultCount === 1
-      ? '1 resultado visible.'
-      : `${resultCount} resultados visibles.`;
+  const resultLabel = isLoading
+    ? 'Actualizando resultados...'
+    : `${resultCount} resultado(s)`;
 
   return (
     <section className="panel" aria-labelledby="task-filters-title">
@@ -44,6 +45,7 @@ export function TaskFilters({
           <input
             type="search"
             value={query}
+            maxLength={60}
             placeholder="Ejemplo: documentación"
             onChange={(event) => onQueryChange(event.target.value)}
           />
@@ -67,9 +69,10 @@ export function TaskFilters({
             value={sortBy}
             onChange={(event) => onSortChange(event.target.value as TaskSort)}
           >
-            <option value="updated-desc">Actualización reciente</option>
-            <option value="created-desc">Creación reciente</option>
-            <option value="title-asc">Título A a Z</option>
+            <option value="updated-desc">Actualizadas recientemente</option>
+            <option value="updated-asc">Actualizadas anteriormente</option>
+            <option value="title-asc">Título A-Z</option>
+            <option value="title-desc">Título Z-A</option>
           </select>
         </label>
 
