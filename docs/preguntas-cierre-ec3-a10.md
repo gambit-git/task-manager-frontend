@@ -6,7 +6,9 @@ Una falla de red significa que la solicitud no llegó o no volvió una
 respuesta (API apagada, conexión caída): `fetch` rechaza la promesa. Un 404
 sí es una respuesta del servidor, que llegó bien y dice que el recurso no
 existe. En el cliente la primera se normaliza como `NETWORK_ERROR` (status
-0) y la segunda como un `HttpError` con status 404.
+0) y la segunda como un `HttpError` con status 404. En desarrollo hay un
+matiz: si la API está detenida, el proxy de Vite responde `502`, y el cliente
+también lo trata como `NETWORK_ERROR`.
 
 ## 2. ¿Por qué debe comprobarse response.ok después de fetch?
 
@@ -75,6 +77,12 @@ modificar el cliente HTTP y no cada componente.
 
 ## 12. ¿Qué cambio fue más difícil y cómo comprobaste que funcionaba?
 
-Escribe aquí tu respuesta cuando hayas probado la integración con la API
-(por ejemplo, con la pestaña Network y deteniendo el Backend para ver el
-error y el botón Reintentar).
+Lo más difícil fue el manejo de la falla de red. Esperaba que, al detener el
+Backend, `fetch` rechazara la promesa, pero con el proxy de Vite la solicitud
+sí recibe respuesta: un `502 Bad Gateway` en texto plano que genera el propio
+proxy. Por eso la interfaz mostraba un error genérico en lugar de "No fue
+posible conectar con la API". Lo corregí tratando los estados 502, 503 y 504
+sin cuerpo de error de la API como falla de conexión. Lo comprobé deteniendo
+la API, viendo el 502 en la pestaña Network y el mensaje de conexión, y
+después levantándola de nuevo y usando Reintentar, que volvió a cargar la
+lista con 200.

@@ -25,6 +25,8 @@ export class HttpError extends Error {
   }
 }
 
+const GATEWAY_ERROR_STATUSES = new Set([502, 503, 504]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -100,6 +102,17 @@ export async function httpRequest<T>(
           message: payload.error.message,
           requestId: payload.error.requestId,
           details: payload.error.details,
+        });
+      }
+
+      // En desarrollo el proxy de Vite responde 502 cuando la API está
+      // detenida, así que una falla de pasarela sin cuerpo de la API se
+      // trata como falla de conexión.
+      if (GATEWAY_ERROR_STATUSES.has(response.status)) {
+        throw new HttpError({
+          status: response.status,
+          code: 'NETWORK_ERROR',
+          message: 'No fue posible conectar con la API.',
         });
       }
 
